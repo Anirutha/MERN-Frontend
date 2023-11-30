@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import Dashboard from './Components/Dashboard';
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
+  const [products,setProducts] = useState([]);
+   useEffect(()=>{
+      async function getProducts(){
+        let response=await fetch('https://mern-two-ruby.vercel.app/products/all',
+        {
+          method:"GET",
+        }
+        )
+        const data=await response.json()
+        if(data){
+          setProducts(data)
+        }
+        }
+      getProducts()
+    },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <Routes>
+        
+        <Route exact path="/"
+          element={<Dashboard
+          products={products}
+          setProducts={setProducts}
+          />} />
+          </Routes>
     </div>
   );
 }
